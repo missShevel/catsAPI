@@ -1,33 +1,44 @@
-import { Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+} from '@nestjs/common';
+import { CreateCatDto, ListAllEntitiesDto, UpdateCatDto } from './dto/cats-dto';
+import { CatsService } from './cats.service';
+import { Cat } from './cats.entity';
 
 @Controller('cats')
 export class CatsController {
+  constructor(private catsService: CatsService) {}
+
   @Post()
-  create(): string {
-    return 'This action adds a new cat';
+  async create(@Body() createCatDto: CreateCatDto) {
+    this.catsService.create(createCatDto);
   }
 
   @Get()
-  findAll(@Req() request: Request): string {
-    return 'This action returns all cats';
+  async findAll(@Query() query: ListAllEntitiesDto): Promise<Cat[]> {
+    return this.catsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    console.log(id);
-    return `This action returns a #${id} cat`;
+  async findOne(@Param('id') id: string): Promise<Cat> {
+    return this.catsService.findOne(id);
   }
 
   @Put(':id')
-  editOne(@Param('id') id: string): string {
-    console.log(id);
-    return `This action edits a #${id} cat`;
+  async editOne(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {
+    return this.catsService.editOne(id, updateCatDto);
   }
 
   @Delete(':id')
-  deleteOne(@Param('id') id: string): string {
-    console.log(id);
-    return `This action deletes a #${id} cat`;
+  async deleteOne(@Param('id') id: string) {
+    this.catsService.delete(id);
   }
 }
