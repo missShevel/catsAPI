@@ -1,35 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { Cat } from './cats.entity';
 import { ICreateCatDto, IUpdateCatDto } from './interface/cats.interfaces';
-import { randomInt } from 'crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CatsService {
-  private cats: Cat[] = [];
+  constructor(
+    @InjectRepository(Cat)
+    private catsRepository: Repository<Cat>,
+  ) {}
 
-  create(cat: ICreateCatDto) {
-    const createdCat = { ...cat } as Cat;
-    createdCat.id = (randomInt(1000)).toString();
-    createdCat.createdAt = new Date();
-    createdCat.updatedAt = new Date();
-    this.cats.push(createdCat);
+  async create(cat: ICreateCatDto) {
+    const createdCat = new Cat();
+    const birthDate = new Date(cat.birthDate);
+    Object.assign(createdCat, cat);
+    createdCat.birthDate = birthDate;
+    await this.catsRepository.save(createdCat);
   }
 
-  findAll(): Cat[] {
-    return this.cats;
+  findAll(): Promise<Cat[]> {
+    return this.catsRepository.find();
   }
 
-  findOne(catId: string): Cat {
-    return this.cats.find((cat) => cat.id === catId);
+  findOne(id: string): Promise<Cat | null> {
+    return this.catsRepository.findOneBy({ id });
   }
 
-  editOne(id: string, updateCatData: IUpdateCatDto) {
-    const cat = this.findOne(id);
-    cat.updatedAt = new Date();
-    Object.assign(cat, updateCatData);
+  async editOne(id: string, updateCatData: IUpdateCatDto) {
+    const updatedCat = await this.findOne(id);
+    Object.assign(updatedCat, updateCatData);
   }
 
-  delete(catId: string) {
-    this.cats = this.cats.filter((cat) => cat.id !== catId);
+  async delete(id: string): Promise<void> {
+    await this.catsRepository.delete(id);
   }
 }

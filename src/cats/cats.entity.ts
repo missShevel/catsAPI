@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export interface Cat {
   id: string;
@@ -11,7 +18,7 @@ export interface Cat {
 
 @Entity()
 export class Cat {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn("increment")
   id: string;
 
   @Column()
