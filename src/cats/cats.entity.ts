@@ -7,14 +7,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export interface Cat {
-  id: string;
-  name: string;
-  color: string;
-  birthDate: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// export interface Cat {
+//   id: string;
+//   name: string;
+//   color: string;
+//   birthDate: Date;
+//   createdAt: Date;
+//   updatedAt: Date;
+// }
 
 @Entity()
 export class Cat {

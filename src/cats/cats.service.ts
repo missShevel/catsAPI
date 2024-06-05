@@ -13,9 +13,7 @@ export class CatsService {
 
   async create(cat: ICreateCatDto) {
     const createdCat = new Cat();
-    const birthDate = new Date(cat.birthDate);
     Object.assign(createdCat, cat);
-    createdCat.birthDate = birthDate;
     await this.catsRepository.save(createdCat);
   }
 
@@ -30,6 +28,7 @@ export class CatsService {
   async editOne(id: string, updateCatData: IUpdateCatDto) {
     const updatedCat = await this.findOne(id);
     Object.assign(updatedCat, updateCatData);
+    this.catsRepository.save(updatedCat);
   }
 
   async delete(id: string): Promise<void> {
