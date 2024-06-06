@@ -11,10 +11,11 @@ export class CatsService {
     private catsRepository: Repository<Cat>,
   ) {}
 
-  async create(cat: ICreateCatDto) {
+  async create(cat: ICreateCatDto): Promise<Cat> {
     const createdCat = new Cat();
     Object.assign(createdCat, cat);
     await this.catsRepository.save(createdCat);
+    return createdCat;
   }
 
   findAll(): Promise<Cat[]> {
@@ -25,10 +26,10 @@ export class CatsService {
     return this.catsRepository.findOneBy({ id });
   }
 
-  async editOne(id: string, updateCatData: IUpdateCatDto) {
+  async editOne(id: string, updateCatData: IUpdateCatDto): Promise<Cat> {
     const updatedCat = await this.findOne(id);
     Object.assign(updatedCat, updateCatData);
-    this.catsRepository.save(updatedCat);
+    return this.catsRepository.save(updatedCat);
   }
 
   async delete(id: string): Promise<void> {

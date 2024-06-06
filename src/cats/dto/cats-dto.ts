@@ -1,8 +1,14 @@
-import { IsDateString, IsEnum, IsInt, MinLength } from "class-validator";
-import { CatColorEnum } from "../enum/cats.enum";
+import {
+  IsDateString,
+  IsEnum,
+  IsNumberString,
+  IsOptional,
+  MinLength,
+} from 'class-validator';
+import { CatColorEnum } from '../enum/cats.enum';
 
 export class CreateCatDto {
-  @MinLength(2)	
+  @MinLength(2)
   name: string;
   @IsEnum(CatColorEnum)
   color: string;
@@ -11,15 +17,18 @@ export class CreateCatDto {
 }
 
 export class ListAllEntitiesDto {
-  @IsInt()
+  @IsNumberString()
   limit: number;
 }
 
 export class UpdateCatDto {
-  @MinLength(2)	
+  @MinLength(2)
+  @IsOptional()
   name?: string;
   @IsEnum(CatColorEnum)
+  @IsOptional()
   color?: string;
   @IsDateString()
+  @IsOptional()
   birthDate?: Date;
 }
