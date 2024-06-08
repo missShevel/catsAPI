@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Post,
   Put,
@@ -29,16 +30,28 @@ export class CatsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Cat> {
-    return this.catsService.findOne(id);
+    try {
+      return this.catsService.findOne(id);
+    } catch (e) {
+      throw e;
+    }
   }
 
   @Put(':id')
   async editOne(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {
-    return this.catsService.editOne(id, updateCatDto);
+    try {
+      return this.catsService.editOne(id, updateCatDto);
+    } catch (e) {
+      throw e;
+    }
   }
 
   @Delete(':id')
   async deleteOne(@Param('id') id: string) {
-    this.catsService.delete(id);
+    try {
+      await this.catsService.delete(id);
+    } catch (e) {
+      throw e;
+    }
   }
 }
