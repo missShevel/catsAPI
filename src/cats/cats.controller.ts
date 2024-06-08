@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   InternalServerErrorException,
   Param,
   Post,
@@ -19,6 +20,7 @@ export class CatsController {
   constructor(private catsService: CatsService) {}
 
   @Post()
+  @HttpCode(201)
   async create(@Body() createCatDto: CreateCatDto) {
     return this.catsService.create(createCatDto);
   }

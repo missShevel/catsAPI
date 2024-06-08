@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Cat } from './cats.entity';
 import { ICreateCatDto, IUpdateCatDto } from './interface/cats.interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,6 +17,10 @@ export class CatsService {
 
   async create(cat: ICreateCatDto): Promise<Cat> {
     const createdCat = new Cat();
+    const catFromDb = await this.catsRepository.findOneBy({ name: cat.name });
+    if (catFromDb) {
+      throw new BadRequestException(`Cat with name ${cat.name} already exists`);
+    }
     Object.assign(createdCat, cat);
     await this.catsRepository.save(createdCat);
     return createdCat;
@@ -34,6 +42,16 @@ export class CatsService {
     const updatedCat = await this.findOne(id);
     if (!updatedCat) {
       throw new NotFoundException(`Cat with ID ${id} not found`);
+    }
+    if (updateCatData.name) {
+      const catFromDb = await this.catsRepository.findOneBy({
+        name: updateCatData.name,
+      });
+      if (catFromDb) {
+        throw new BadRequestException(
+          `Cat with name ${updateCatData.name} already exists`,
+        );
+      }
     }
     Object.assign(updatedCat, updateCatData);
     return this.catsRepository.save(updatedCat);

@@ -2,7 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -17,10 +19,11 @@ import {
 
 @Entity()
 export class Cat {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn('increment')
   id: string;
 
   @Column()
+  @Index({ unique: true })
   name: string;
 
   @Column()
