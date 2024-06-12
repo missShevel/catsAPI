@@ -21,12 +21,12 @@ export class CatsController {
 
   @Post()
   @HttpCode(201)
-  async create(@Body() createCatDto: CreateCatDto) {
+  async create(@Body() createCatDto: CreateCatDto): Promise<Cat> {
     return this.catsService.create(createCatDto);
   }
 
   @Get()
-  async findAll(@Query() query: ListAllEntitiesDto): Promise<Cat[]> {
+  async findAll(): Promise<Cat[]> {
     return this.catsService.findAll();
   }
 
